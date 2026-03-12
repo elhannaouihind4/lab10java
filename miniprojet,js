@@ -1,0 +1,72 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <title>Mini calculatrice</title>
+  <style>
+    body { font-family: sans-serif; max-width: 400px; margin: 2rem auto; padding: 1rem; }
+    input, select, button { display: block; width: 100%; margin: 0.5rem 0; padding: 0.5rem; }
+    #resultat { margin-top: 1rem; padding: 1rem; background: #f0f0f0; }
+    .erreur { color: #d32f2f; font-weight: bold; }
+  </style>
+</head>
+<body>
+  <h1>Calculatrice</h1>
+  
+  <input type="text" id="nb1" placeholder="Premier nombre">
+  <input type="text" id="nb2" placeholder="Deuxième nombre">
+  
+  <select id="operation">
+    <option value="+">Addition (+)</option>
+    <option value="-">Soustraction (-)</option>
+    <option value="*">Multiplication (*)</option>
+    <option value="/">Division (/)</option>
+  </select>
+  
+  <button id="calculer">Calculer</button>
+  
+  <div id="resultat"></div>
+
+  <script>
+    function calculerNombre(val) {
+      const n = Number(val)
+      if (isNaN(n) || !Number.isFinite(n)) {
+        throw new Error(`${val} n'est pas un nombre valide`)
+      }
+      return n
+    }
+
+    function calculerOperation(a, b, op) {
+      if (op === "+") return a + b
+      if (op === "-") return a - b
+      if (op === "*") return a * b
+      if (op === "/") {
+        if (b === 0) throw new Error("Division par zéro impossible")
+        return a / b
+      }
+      throw new Error(`Opération ${op} non supportée`)
+    }
+
+    function calculer(aStr, bStr, op) {
+      const a = calculerNombre(aStr)
+      const b = calculerNombre(bStr)
+      return calculerOperation(a, b, op)
+    }
+
+    document.getElementById("calculer").addEventListener("click", () => {
+      const nb1 = document.getElementById("nb1").value
+      const nb2 = document.getElementById("nb2").value
+      const op = document.getElementById("operation").value
+      const resultatDiv = document.getElementById("resultat")
+
+      try {
+        const res = calculer(nb1, nb2, op)
+        resultatDiv.innerHTML = `Résultat: ${res}`
+        resultatDiv.classList.remove("erreur")
+      } catch (e) {
+        resultatDiv.innerHTML = `Erreur: ${e.message}`
+        resultatDiv.classList.add("erreur")
+      }
+    })
+  </script>
+</body>
+</html>
